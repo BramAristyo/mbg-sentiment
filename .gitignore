@@ -129,3 +129,6 @@ dmypy.json
 *.swo
 *~
 .DS_Store
+
+# Cookie files
+cookie.json
