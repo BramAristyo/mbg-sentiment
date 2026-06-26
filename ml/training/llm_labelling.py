@@ -17,9 +17,9 @@ from openai import OpenAI
 # ── Configuration ──────────────────────────────────────────────────────────
 load_dotenv()
 
-INPUT_FILE = "dataset/cleaned/cleaned.csv"
-OUTPUT_FILE = "dataset/labeled/labeled.csv"
-PROGRESS_FILE = "dataset/labeled/.labeling_progress.json"
+INPUT_FILE = "../../dataset/cleaned/cleaned.csv"
+OUTPUT_FILE = "../../dataset/labeled/labeled.csv"
+PROGRESS_FILE = "../../dataset/labeled/.labeling_progress.json"
 
 TEST_MODE = False  # ← Set False to label ALL 7k+ rows
 TEST_LIMIT = 35  # ← Number of rows to label in TEST_MODE

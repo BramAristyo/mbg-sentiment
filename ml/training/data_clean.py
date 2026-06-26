@@ -3,8 +3,8 @@ import re
 import pandas as pd
 
 # ── Configuration ──────────────────────────────────────────────────────────
-INPUT_FILE = "dataset/raw/merged_raw.csv"
-OUTPUT_FILE = "dataset/cleaned/cleaned.csv"
+INPUT_FILE = "../../dataset/raw/merged_raw.csv"
+OUTPUT_FILE = "../../dataset/cleaned/cleaned.csv"
 MIN_WORD_COUNT = 2       # Drop texts shorter than this many words
 MIN_CHAR_LENGTH = 5      # Drop texts shorter than this many characters
 
@@ -33,10 +33,13 @@ EMOJI_PATTERN = re.compile(
     flags=re.UNICODE,
 )
 
-# ── Load raw merged data ───────────────────────────────────────────────────
-df = pd.read_csv(INPUT_FILE)
-total_before = len(df)
-print(f"[LOAD] {total_before} rows from {INPUT_FILE}")
+def main():
+    global df, total_before
+
+    # ── Load raw merged data ───────────────────────────────────────────────
+    df = pd.read_csv(INPUT_FILE)
+    total_before = len(df)
+    print(f"[LOAD] {total_before} rows from {INPUT_FILE}")
 
 # ── Text cleaning function ─────────────────────────────────────────────────
 def clean_text(text: str) -> str:
@@ -99,30 +102,36 @@ def clean_text(text: str) -> str:
 
     return text
 
-# ── Apply cleaning ─────────────────────────────────────────────────────────
-df["text"] = df["text"].astype(str).apply(clean_text)
+def main():
+    global df
+    # ── Apply cleaning ─────────────────────────────────────────────────────
+    df["text"] = df["text"].astype(str).apply(clean_text)
 
-# ── Drop rows with empty or whitespace-only text ───────────────────────────
-df = df[df["text"].str.strip() != ""]
+    # ── Drop rows with empty or whitespace-only text ───────────────────────
+    df = df[df["text"].str.strip() != ""]
 
-# ── Drop texts that are too short to be meaningful ─────────────────────────
-word_counts = df["text"].str.split().str.len()
-char_lengths = df["text"].str.len()
-mask_short = (word_counts >= MIN_WORD_COUNT) & (char_lengths >= MIN_CHAR_LENGTH)
-df = df[mask_short]
+    # ── Drop texts that are too short to be meaningful ─────────────────────
+    word_counts = df["text"].str.split().str.len()
+    char_lengths = df["text"].str.len()
+    mask_short = (word_counts >= MIN_WORD_COUNT) & (char_lengths >= MIN_CHAR_LENGTH)
+    df = df[mask_short]
 
-# ── Drop duplicate texts (keep first occurrence) ───────────────────────────
-df = df.drop_duplicates(subset=["text"])
+    # ── Drop duplicate texts (keep first occurrence) ───────────────────────
+    df = df.drop_duplicates(subset=["text"])
 
-# ── Keep only the columns needed for sentiment analysis ────────────────────
-df = df[["text", "date", "source"]]
+    # ── Keep only the columns needed for sentiment analysis ────────────────
+    df = df[["text", "date", "source"]]
 
-# ── Save cleaned result ────────────────────────────────────────────────────
-df.to_csv(OUTPUT_FILE, index=False)
+    # ── Save cleaned result ────────────────────────────────────────────────
+    df.to_csv(OUTPUT_FILE, index=False)
 
-# ── Summary ────────────────────────────────────────────────────────────────
-total_after = len(df)
-removed = total_before - total_after
-print(f"[DONE] {OUTPUT_FILE} → {total_after} rows")
-print(f"       Removed: {removed} rows (empty / duplicates / too short)")
-print(f"       Sources: {dict(df['source'].value_counts())}")
+    # ── Summary ────────────────────────────────────────────────────────────
+    total_after = len(df)
+    removed = total_before - total_after
+    print(f"[DONE] {OUTPUT_FILE} → {total_after} rows")
+    print(f"       Removed: {removed} rows (empty / duplicates / too short)")
+    print(f"       Sources: {dict(df['source'].value_counts())}")
+
+
+if __name__ == "__main__":
+    main()
