@@ -133,8 +133,8 @@ Berikut alur project dari awal sampai siap produksi:
 │    • Hapus URL, @mention, #hashtag (simpan kata setelah #)          │
 │    • Hapus emoji & simbol Unicode dekoratif                         │
 │    • Normalisasi smart quotes, en/em dash, non-breaking space       │
-│    • Hapus baris dengan teks kosong / terlalu pendek (<2 kata, <5 char)│
-│    • Hapus duplikat teks                                             │
+│    • Hapus baris dengan teks kosong / terlalu pendek                │
+│    • Hapus duplikat teks                                            │
 │    → cleaned.csv                          7.172 baris               │
 ├─────────────────────────────────────────────────────────────────────┤
 │ 4. LABELLING (Pelabelan Otomatis)     ml/training/llm_labelling.py  │
